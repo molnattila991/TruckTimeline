@@ -1,44 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { RangeItem } from 'src/app/components/date-time-range-selector/range-item.interface';
 import { GantDiagramData } from 'src/app/components/gant-diagram-wrapper/gant-diagram-data.interface';
 import { TimeLineStoreBase } from '../store/time-line-store';
 import { refreshFilterValue, refreshRangeValue } from '../store/time-line.actions';
 import { TimeLineBaseService } from './time-line-base.service';
-import { Location } from '@angular/common';
 
 @Injectable()
 export class TimeLineFilterService {
-  private subs: Subscription = new Subscription();
   constructor(
     private baseService: TimeLineBaseService,
-    private store: Store<TimeLineStoreBase>,
-    private location: Location
-  ) {
-    this.subs.add(
-      this.getFilterValue$.subscribe(v => {
-        if (v && v.filterTextValue || v.rangeValue) {
-          let query = "";
-          if (v.filterTextValue) {
-            query += "filter=" + v.filterTextValue;
-          }
-
-          if (v.rangeValue && v.rangeValue.end && v.rangeValue.start) {
-            query += (query == "" ? "" : "&") + "start=" + getFormattedDate(v.rangeValue.start) + " &end=" + getFormattedDate(v.rangeValue.end);
-          }
-
-          this.location.replaceState("time-line", query)
-        } else {
-          this.location.replaceState("time-line")
-        }
-      })
-    );
-  }
-  ngOnDestroy(): void {
-    this.subs && this.subs.unsubscribe();
-  }
+    private store: Store<TimeLineStoreBase>
+  ) { }
 
   public refreshTextValue(value: string): void {
     this.store.dispatch(refreshFilterValue({ value }));
@@ -87,8 +62,4 @@ export class TimeLineFilterService {
       return chartData;
     })
   );
-}
-
-function getFormattedDate(date: Date): string {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }

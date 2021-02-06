@@ -13,8 +13,7 @@ export class GraphFilterContainerComponent implements OnDestroy {
   private subs: Subscription = new Subscription();
   private filter$: ReplaySubject<string> = new ReplaySubject();
   constructor(
-    public readonly timeLineBaseService: TimeLineFilterService,
-    private readonly timeLineFilterService: TimeLineFilterService
+    public readonly timeLineFilterService: TimeLineFilterService
   ) {
     this.subs.add(
       this.filter$
@@ -25,9 +24,9 @@ export class GraphFilterContainerComponent implements OnDestroy {
         )
     );
   }
-  
+
   rangeValueChanged(range: RangeItem): void {
-    this.timeLineBaseService.refreshRangeValue(range);
+    this.timeLineFilterService.refreshRangeValue(range);
   }
 
   filterList(filterText: string): void {

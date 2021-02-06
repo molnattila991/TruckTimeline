@@ -7,7 +7,8 @@
     </mat-drawer>
     <mat-drawer-content>
         <div style="height: 1000px;">
-            <app-gant-diagram-wrapper [range]="rangeValue" [data]="timeLineFilterService.getGantDiagramData$|async">
+            <app-gant-diagram-wrapper [range]="timeLineFilterService.getFilterRangeValue$|async"
+                [data]="timeLineFilterService.getGantDiagramData$|async">
             </app-gant-diagram-wrapper>
         </div>
     </mat-drawer-content>

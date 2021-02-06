@@ -14,12 +14,22 @@ export class TimeLineFilterService {
   private subs: Subscription = new Subscription();
   constructor(
     private baseService: TimeLineBaseService,
-    private readonly store: Store<TimeLineStoreBase>,
-    private location: Location) {
+    private store: Store<TimeLineStoreBase>,
+    private location: Location
+  ) {
     this.subs.add(
-      this.getFilterTextValue$.subscribe(v => {
-        if (v) {
-          this.location.replaceState("time-line", "filter=" + v)
+      this.getFilterValue$.subscribe(v => {
+        if (v && v.filterTextValue || v.rangeValue) {
+          let query = "";
+          if (v.filterTextValue) {
+            query += "filter=" + v.filterTextValue;
+          }
+
+          if (v.rangeValue && v.rangeValue.end && v.rangeValue.start) {
+            query += (query == "" ? "" : "&") + "start=" + getFormattedDate(v.rangeValue.start) + " &end=" + getFormattedDate(v.rangeValue.end);
+          }
+
+          this.location.replaceState("time-line", query)
         } else {
           this.location.replaceState("time-line")
         }
@@ -40,10 +50,12 @@ export class TimeLineFilterService {
 
   readonly getFilterTextValue$ = this.store.select(item => item.timeLine.uiStates.filterTextValue);
   readonly getFilterRangeValue$ = this.store.select(item => item.timeLine.uiStates.rangeValue);
+  readonly getFilterValue$ = this.store.select(item => item.timeLine.uiStates);
 
   readonly getTruckByFilter$ = combineLatest([
     this.baseService.getTruckWithOrdersList$,
-    this.getFilterTextValue$.pipe(map(value => value.toLocaleLowerCase()))
+    this.getFilterTextValue$.pipe(
+      map(value => value ? value.toLocaleLowerCase() : ""))
   ]).pipe(
     filter(([trucks, filterValue]) => trucks != undefined),
     map(([trucks, filterValue]) => {
@@ -75,4 +87,8 @@ export class TimeLineFilterService {
       return chartData;
     })
   );
+}
+
+function getFormattedDate(date: Date): string {
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 }

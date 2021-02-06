@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RangeItem } from 'src/app/components/date-time-range-selector/range-item.interface';
 import { TimeLineBaseService } from '../../services/time-line-base.service';
 import { TimeLineFilterService } from '../../services/time-line-filter.service';
+import { isValidDate } from '../../../../utils/date-is-valid.function';
 
 @Component({
   selector: 'app-time-line-page-container',
@@ -26,10 +27,21 @@ export class TimeLinePageContainerComponent implements OnInit {
     const rangeStartFromUrl = this.route.snapshot.queryParamMap.get('start');
     const rangeEndFromUrl = this.route.snapshot.queryParamMap.get('end');
     if (rangeStartFromUrl && rangeEndFromUrl) {
-      this.timeLineFilterService.refreshRangeValue(<RangeItem>{
-        start: new Date(rangeStartFromUrl),
-        end: new Date(rangeEndFromUrl)
-      });
+      try {
+        const range: RangeItem = <RangeItem>{
+          start: new Date(rangeStartFromUrl),
+          end: new Date(rangeEndFromUrl)
+        }
+
+        if (isValidDate(range.end) == false)
+          alert("End date in URL is not valid...");
+        if (isValidDate(range.start) == false)
+          alert("Start date in URL is not valid...");
+
+        this.timeLineFilterService.refreshRangeValue(range);
+      } catch (err) {
+        alert("Query params are not valid...")
+      }
     }
   }
 

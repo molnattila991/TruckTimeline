@@ -25,15 +25,7 @@ export class GraphFilterContainerComponent implements OnDestroy {
           debounce(() => interval(500))
         ).subscribe(
           value => {
-            const queryParams: Params = { 'filter': value };
-
-            this.router.navigate(
-              [],
-              {
-                relativeTo: this.activatedRoute,
-                queryParams: queryParams,
-                queryParamsHandling: 'merge',
-              });
+            this.refreshUrl({ 'filter': value })
             this.timeLineFilterService.refreshTextValue(value)
           }
         )
@@ -41,17 +33,12 @@ export class GraphFilterContainerComponent implements OnDestroy {
   }
 
   rangeValueChanged(range: RangeItem): void {
-    const queryParams: Params = { 'start': getFormattedDate(range.start), 'end': getFormattedDate(range.end) };
-
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: queryParams,
-        queryParamsHandling: 'merge',
-      });
-
-    this.timeLineFilterService.refreshRangeValue(range);
+    try {
+      this.refreshUrl({ 'start': getFormattedDate(range.start), 'end': getFormattedDate(range.end) })
+      this.timeLineFilterService.refreshRangeValue(range);
+    } catch (err) {
+      alert("Selected dates are not valid...");
+    }
   }
 
   filterList(filterText: string): void {
@@ -60,5 +47,15 @@ export class GraphFilterContainerComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subs && this.subs.unsubscribe();
+  }
+
+  refreshUrl(queryParams: Params): void {
+    this.router.navigate(
+      [],
+      {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParams,
+        queryParamsHandling: 'merge',
+      });
   }
 }

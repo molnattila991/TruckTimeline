@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TimeLineBaseService } from '../../services/time-line-base.service';
+import { TimeLineFilterService } from '../../services/time-line-filter.service';
 
 @Component({
   selector: 'app-time-line-page-container',
@@ -12,13 +13,14 @@ export class TimeLinePageContainerComponent implements OnInit {
 
   constructor(
     public readonly timeLineBaseService: TimeLineBaseService,
+    public readonly timeLineFilterService: TimeLineFilterService,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
     const filterFromUrl = this.route.snapshot.queryParamMap.get('filter');
     if (filterFromUrl) {
-      this.timeLineBaseService.refreshTextValue(filterFromUrl);
+      this.timeLineFilterService.refreshTextValue(filterFromUrl);
     }
   }
 

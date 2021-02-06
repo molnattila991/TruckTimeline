@@ -2,18 +2,12 @@
     <mat-drawer mode="side" opened>
         <div style="width: 250px;">
             <h3 class="form-field-container">Filters</h3>
-            <div class="form-field-container">
-                <app-filter-container></app-filter-container>
-            </div>
-            <div class="form-field-container">
-                <app-date-time-range-selector (rangeValueChanged)="rangeValueChanged($event)">
-                </app-date-time-range-selector>
-            </div>
+            <app-graph-filter-container></app-graph-filter-container>
         </div>
     </mat-drawer>
     <mat-drawer-content>
         <div style="height: 1000px;">
-            <app-gant-diagram-wrapper [range]="rangeValue" [data]="timeLineBaseService.getGantDiagramData$|async">
+            <app-gant-diagram-wrapper [range]="rangeValue" [data]="timeLineFilterService.getGantDiagramData$|async">
             </app-gant-diagram-wrapper>
         </div>
     </mat-drawer-content>

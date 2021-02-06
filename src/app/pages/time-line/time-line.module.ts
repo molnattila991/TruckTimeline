@@ -13,7 +13,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { DateTimeRangeSelectorModule } from '../../components/date-time-range-selector/date-time-range-selector.module';
 import { GantDiagramWrapperModule } from '../../components/gant-diagram-wrapper/gant-diagram-wrapper.module';
 import { TextFilterModule } from '../../components/text-filter/text-filter.module';
-import { FilterContainerComponent } from './components/filter-container/filter-container.component';
+import { TimeLineFilterService } from './services/time-line-filter.service';
+import { GraphFilterContainerComponent } from './components/graph-filter/graph-filter-container.component';
 
 const routes: Routes = [
   {
@@ -25,7 +26,7 @@ const routes: Routes = [
   declarations: [
     TimeLinePageContainerComponent,
     TimeLinePageViewComponent,
-    FilterContainerComponent
+    GraphFilterContainerComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +44,8 @@ const routes: Routes = [
   exports: [TimeLinePageContainerComponent],
   providers: [
     TimeLineBaseService,
-    TimeLineDataProviderService
+    TimeLineDataProviderService,
+    TimeLineFilterService
   ]
 })
 export class TimeLineModule {

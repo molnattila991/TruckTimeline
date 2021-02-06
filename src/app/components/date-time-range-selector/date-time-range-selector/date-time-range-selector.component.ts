@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormControl, FormGroup } from '@angular/forms';
 import { interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
+import { RangeItem } from '../range-item.interface';
 
 @Component({
   selector: 'app-date-time-range-selector',
@@ -10,7 +11,7 @@ import { debounce } from 'rxjs/operators';
 })
 export class DateTimeRangeSelectorComponent implements OnInit, OnDestroy {
   range: FormGroup;
-  @Output() rangeValueChanged: EventEmitter<any> = new EventEmitter();
+  @Output() rangeValueChanged: EventEmitter<RangeItem> = new EventEmitter();
   private subs: Subscription = new Subscription();
   constructor() {
     this.range = new FormGroup({
@@ -27,7 +28,10 @@ export class DateTimeRangeSelectorComponent implements OnInit, OnDestroy {
       this.range.valueChanges
         .pipe(debounce(() => interval(200)))
         .subscribe(
-          (value) => this.rangeValueChanged.emit(value)
+          (value) => this.rangeValueChanged.emit(<RangeItem>{
+            start: value.start,
+            end: value.end
+          })
         )
     );
   }

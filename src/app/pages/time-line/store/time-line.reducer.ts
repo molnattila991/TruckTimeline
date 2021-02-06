@@ -3,12 +3,14 @@ import { TimeLineStore } from './time-line-store';
 import { refreshOrderList, refreshTruckList, retrievedOrderList, retrievedTruckList, refreshFilterValue } from './time-line.actions';
 import { Order } from '../models/order.interface';
 import { filter } from 'rxjs/operators';
+import { RangeItem } from 'src/app/components/date-time-range-selector/range-item.interface';
 
 export const initialState: Readonly<TimeLineStore> = {
     trucks: [],
     orders: [],
     uiStates: {
-        filterTextValue: ""
+        filterTextValue: "",
+        rangeValue: (<RangeItem>{ start: undefined, end: undefined })
     }
 }
 
